@@ -1,0 +1,56 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %}Flipkart | Wishlist{%endblock %} 
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <h3>Your Wishlist</h3>
+        <hr>
+         
+        {% for m in messages %}
+        <div class="alert alert-info">
+            <p>{{m}}</p>
+        </div>
+        {% endfor %}
+
+        {% for product in wishlist_items %}
+
+        <div class="col-md-6 mt-3 text-center">
+            <img src="{{product.productid.images.url}}" alt="{{product.productid.productname}}" width="500px" height="400px">
+        </div>
+
+        <div class="col-md-6 mt-3">
+            <div class="card-header fw-bold">
+                <div class="card-body">
+                    <h5 class="card-title">{{product.productid.productname}}</h5>
+                    <p class="card-text text-success fw-bold">Special Price</p>
+                    <p class="card-text">
+                        <strong>RS: ₹ {{product.productid.price}}</strong>
+                    </p>
+                    <p class="card-text">{{product.productid.description}}</p>
+                    <h3 class="card-text fw-bold">
+                        Avaliable Quantity : {{product.productid.quantity_available}}
+                    </h3>
+                    <p class="card-text fw-bold">Available Offers</p>
+                    <ul>
+                        <li>Bank offer 10% Debit/Credit</li>
+                        <li>Bank Offer 50% unlimited cashback</li>
+                        <li>No cost Emi 3,333/month</li>
+                    </ul>
+                    <a href="{% url 'addtocart' product.productid.productid %}" class="btn btn-primary">Add To Cart</a>
+                    <a href="{% url 'removewishlist' product.productid.productid %}" class="btn btn-success">Remove</a>
+                    <a href="/" class="btn btn-danger">Back</a>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="alert alert-info">
+            <p>Your wishlist is empty . start adding products</p>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

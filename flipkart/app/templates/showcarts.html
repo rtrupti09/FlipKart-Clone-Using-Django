@@ -1,0 +1,114 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %}Flipkart | Carts{%endblock %} 
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <h3>Your Carts</h3>
+        <hr>
+         
+        {% for m in messages %}
+        <div class="alert alert-info">
+            <p>{{m}}</p>
+        </div>
+        {% endfor %}
+        <div class="col-md-9">
+            <div class="row">
+                {% for x in allcarts %}
+
+                <div class="col-md-6 mt-3 text-center">
+                    <img src="{{x.productid.images.url}}" alt="{{x.productid.productname}}" width="500px" height="400px">
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <div class="card-header fw-bold">
+                        <div class="card-body">
+                            <h5 class="card-title">{{x.productid.productname}}</h5>
+                            <p class="card-text text-success fw-bold">Special Price</p>
+                            <p class="card-text">
+                                <strong>RS: ₹ {{x.productid.price}}</strong>
+                                &nbsp;
+                                <del>₹ {{x.productid.price | add:x.productid.price}}</del>
+                                <span class="text-success">50% off</span>
+                            </p>
+                            <p class="card-text">{{x.productid.description}}</p>
+                            <h3 class="card-text fw-bold">
+                                Avaliable Quantity : {{product.x.quantity_available}}
+                            </h3>
+                            <p class="card-text fw-bold">Available Offers</p>
+                            <ul>
+                                <li>Bank offer 10% Debit/Credit</li>
+                                <li>Bank Offer 50% unlimited cashback</li>
+                                <li>No cost Emi 3,333/month</li>
+                            </ul>
+                            <p>Delivery By : <strong>{{date}}</strong>|<span>Free</span></p>
+                            <p>10 Days return Policy</p>                            <h3 class="card-text fw-bold">
+                                Available Quantity : {{x.productid.quantity_available}}
+                            </h3>
+                            <!-- qty -->
+                            <p>
+                            <strong>QTY:</strong>
+                            <a href="{% url 'updateqty' 0 x.productid.productid %}"><button class="btn btn-danger">-</button></a>
+                            <input type="number" value="{{x.qty}}" disabled/>
+                            {% if x.qty < x.productid.quantity_available %}
+                            <a href="{% url 'updateqty' 1 x.productid.productid %}"><button class="btn btn-primary">+</button></a>
+                            {% else %}
+                            <button class="btn btn-danger">Max</button>
+                            <small >No more stock</small>
+                            {% endif %}
+                            </p>
+        
+                            {% if has_profile and has_address %}
+                            <a href="{% url 'checkoutsingle' x.productid.productid %}" class="btn btn-warning">Proceed to checkout</a>
+                            {% else %}
+                            <button class="btn btn-secondary" disabled> Checkout unavailable</button>
+                            {% endif %}
+                            
+                            <a href="{% url 'removefromcart' x.productid.productid %}" class="btn btn-success">Remove</a>
+                            <a href="/" class="btn btn-danger">Back</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <div class="alert alert-info">
+                    <p>Your Cart is empty . start adding products</p>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+        <!-- total amount summary -->
+         <div class="col-md-2">
+            <h3 class="bth-danger">Total Summary</h3>
+            <h5>Total Items:{{totalitems}}</h5>
+            <hr>
+            <h5>Total Amount:₹ {{totalamount}}</h5>
+
+            <!-- checkout button -->
+            {% if has_profile and has_address %}
+            <a href="{% url 'checkout' %}" class="btn btn-warning">Proceed to checkout</a>
+            {% else %}
+            <button class="btn btn-secondary" disabled> Checkout unavailable</button>
+            {% endif %}
+
+            {% if not has_profile %}
+            <div class="alert alert-warning mt-3">
+                please <a href="{% url 'addprofile' %}">complete your profile</a>before Checkout
+            </div>
+            {% endif %}
+
+            {% if not has_address %}
+            <div class="alert alert-warning">
+                please <a href="{% url 'addaddress' %}">add your address</a>before Checkout
+            </div>
+            {% endif %}
+         </div>
+
+       
+       
+
+    </div>
+</div>
+{% endblock %}
